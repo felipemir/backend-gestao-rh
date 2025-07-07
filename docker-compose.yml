@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    container_name: teste-apresentacao
+    ports:
+      - "8001:8001"
+
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
