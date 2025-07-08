@@ -43,11 +43,8 @@ jobs:
       # 4. Linting com Flake8: Verifica a qualidade do código.
       - name: Rodar linter com Flake8
         run: |
-          # --count: mostra o número total de erros.
-          # --select=E9,F63,F7,F82: seleciona erros específicos de sintaxe/lógica.
-          # --show-source: mostra a linha do código com erro.
-          # --statistics: exibe estatísticas.
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # Analisa o diretório atual (.), mas exclui a pasta do ambiente virtual.
+          flake8 . --count --exclude=meuambiente --show-source --statistics
 
       # 5. Rodar Testes com Pytest: Executa os testes unitários.
      
