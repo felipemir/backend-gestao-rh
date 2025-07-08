@@ -1,0 +1,59 @@
+# .github/workflows/ci.yml
+
+# Nome do seu workflow. Aparecerá na aba "Actions" do GitHub.
+name: CI Backend Gestão RH
+
+# Gatilhos: Define quando o workflow deve ser executado.
+# - push: a cada push para a branch 'main' ou 'master'.
+# - pull_request: a cada pull request aberto para essas branches.
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+# Trabalhos (Jobs): Define uma ou mais tarefas a serem executadas.
+jobs:
+  # O nome do nosso job é 'build'.
+  build:
+    # O tipo de máquina que será usada para executar o job.
+    runs-on: ubuntu-latest
+
+    # Passos (Steps): Sequência de tarefas que o job executará.
+    steps:
+      # 1. Checkout do código: Baixa o código do seu repositório.
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      # 2. Configurar o Python: Define a versão do Python a ser usada.
+      #    Seu arquivo pyvenv.cfg indica Python 3.12.
+      - name: Configurar Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip' # Adiciona cache para as dependências, acelerando futuras execuções
+
+      # 3. Instalar dependências: Instala as bibliotecas do requirements.txt.
+      - name: Instalar Dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install flake8 pytest # Instala ferramentas de teste e lint
+
+      # 4. Linting com Flake8: Verifica a qualidade do código.
+      - name: Rodar linter com Flake8
+        run: |
+          # --count: mostra o número total de erros.
+          # --select=E9,F63,F7,F82: seleciona erros específicos de sintaxe/lógica.
+          # --show-source: mostra a linha do código com erro.
+          # --statistics: exibe estatísticas.
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      # 5. Rodar Testes com Pytest: Executa os testes unitários.
+     
+      - name: Rodar Testes com Pytest
+        run: pytest
+
+      # 6. Build da Imagem Docker: Verifica se o Dockerfile está funcional.
+      - name: Build da Imagem Docker
+        run: docker build . --file Dockerfile --tag gestao-rh:${{ github.sha }}
