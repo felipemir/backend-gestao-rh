@@ -25,7 +25,7 @@ from routes.visualiza_arquivo_estagiario import bp_visualiza_pdf_arquivo_estagia
 from routes.listar_pdfs_estagiarios import bp_listar_pdfs_estagiarios
 from routes.criar_estagiario import bp_criar_estagiario
 from routes.arquivar_estagiario import bp_arquivar_estagiario
-from routes.ativar_estagiario   import bp_ativar_estagiario
+from routes.ativar_estagiario import bp_ativar_estagiario
 from routes.send_varios_setores import bp_send_varios_setores_pdf
 from routes.send_varios_setores_estagiario import bp_send_varios_setores_estagiarios_pdf
 from routes.buscar_arquivados_estagiarios import bp_buscar_estagiarios_arquivados
@@ -41,18 +41,20 @@ app = Flask(__name__)
 # Configura CORS uma única vez com os dois domínios permitidos
 CORS(app, supports_credentials=True, origin_regex=r"http://12\.90\.4\.\d+:8081")
 
+
 # Adiciona os cabeçalhos extras corretamente (sem sobrescrever)
 @app.after_request
 def after_request(response):
-    origin = response.headers.get('Access-Control-Allow-Origin')
+    origin = response.headers.get("Access-Control-Allow-Origin")
     if origin:
-        response.headers['Access-Control-Allow-Credentials'] = 'true'
-        response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PATCH, OPTIONS'
-        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PATCH, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
     return response
 
+
 login_manager.init_app(app)
-app.secret_key = 'sa3fab861d0da4efd62c6f2aff0649b5e'
+app.secret_key = "sa3fab861d0da4efd62c6f2aff0649b5e"
 
 # Registro dos Blueprints
 app.register_blueprint(routes_bp)
@@ -89,9 +91,12 @@ app.register_blueprint(bp_limpar_pasta_setor)
 app.register_blueprint(bp_atualizar_estagiario)
 app.register_blueprint(bp_documentos)
 app.register_blueprint(bp_send_documentos)
+
+
 @app.route("/")
 def home():
-    return  "bem vindo ao sistema de rh "
+    return "bem vindo ao sistema de rh "
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8001, debug=True)

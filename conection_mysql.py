@@ -1,16 +1,17 @@
 import mysql.connector
 from mysql.connector import Error
 
+
 def connect_mysql():
     try:
         # Configurações do banco de dados MySQL (substitua pelos seus valores)
         connection = mysql.connector.connect(
-            host="12.90.1.2",         # Endereço do servidor MySQL (ou IP interno da intranet)
-            user="devop",             # Usuário do banco de dados
-            password="DEVsjc@2025",   # Senha do banco de dados
-            database="sistema_frequenciarh"  # Nome do banco de dados
+            host="12.90.1.2",  # Endereço do servidor MySQL (ou IP interno da intranet)
+            user="devop",  # Usuário do banco de dados
+            password="DEVsjc@2025",  # Senha do banco de dados
+            database="sistema_frequenciarh",  # Nome do banco de dados
         )
-        
+
         if connection.is_connected():
             print("Conexão com o MySQL bem-sucedida!")
             return connection

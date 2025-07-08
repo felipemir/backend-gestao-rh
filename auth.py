@@ -7,16 +7,18 @@ auth_bp = Blueprint("auth", __name__)
 # 🔹 Criando o login_manager DENTRO do auth.py
 login_manager = LoginManager()
 
+
 def get_db_connection():
     return mysql.connector.connect(
         host="12.90.1.2",
         user="devop",
         password="DEVsjc@2025",
-        database="sistema_frequenciarh"
+        database="sistema_frequenciarh",
     )
 
+
 class Usuario(UserMixin):
-    def __init__(self, id, matricula, nome, role,cargo):
+    def __init__(self, id, matricula, nome, role, cargo):
         self.id = id
         self.matricula = matricula
         self.nome = nome
@@ -26,20 +28,31 @@ class Usuario(UserMixin):
     def get_id(self):
         return str(self.id)
 
+
 @login_manager.user_loader
 def load_user(user_id):
     conexao = get_db_connection()
     cursor = conexao.cursor(dictionary=True)
 
-    cursor.execute("SELECT id, matricula, nome, role, cargo FROM usuarios WHERE id = %s", (user_id,))
+    cursor.execute(
+        "SELECT id, matricula, nome, role, cargo FROM usuarios WHERE id = %s",
+        (user_id,),
+    )
     usuario_data = cursor.fetchone()
 
     cursor.close()
     conexao.close()
 
     if usuario_data:
-        return Usuario(usuario_data["id"], usuario_data["matricula"], usuario_data["nome"], usuario_data["role"], usuario_data["cargo"])
+        return Usuario(
+            usuario_data["id"],
+            usuario_data["matricula"],
+            usuario_data["nome"],
+            usuario_data["role"],
+            usuario_data["cargo"],
+        )
     return None
+
 
 @auth_bp.route("/api/login", methods=["POST"])
 def login():
@@ -50,7 +63,10 @@ def login():
     conexao = get_db_connection()
     cursor = conexao.cursor(dictionary=True)
 
-    cursor.execute("SELECT id, matricula, nome, senha, role, cargo FROM usuarios WHERE matricula = %s", (matricula,))
+    cursor.execute(
+        "SELECT id, matricula, nome, senha, role, cargo FROM usuarios WHERE matricula = %s",
+        (matricula,),
+    )
     usuario_data = cursor.fetchone()
 
     cursor.close()
@@ -63,10 +79,27 @@ def login():
     if usuario_data["senha"] != senha:
         return jsonify({"erro": "Senha inválida!"}), 401
 
-    usuario = Usuario(usuario_data["id"], usuario_data["matricula"], usuario_data["nome"], usuario_data["role"], usuario_data["cargo"])
+    usuario = Usuario(
+        usuario_data["id"],
+        usuario_data["matricula"],
+        usuario_data["nome"],
+        usuario_data["role"],
+        usuario_data["cargo"],
+    )
     login_user(usuario, remember=True)
 
-    return jsonify({"mensagem": "Login realizado com sucesso!", "nome": usuario.nome, "role": usuario.role, "cargo": usuario.cargo}), 200
+    return (
+        jsonify(
+            {
+                "mensagem": "Login realizado com sucesso!",
+                "nome": usuario.nome,
+                "role": usuario.role,
+                "cargo": usuario.cargo,
+            }
+        ),
+        200,
+    )
+
 
 @auth_bp.route("/logout", methods=["POST"])
 @login_required

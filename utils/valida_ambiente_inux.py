@@ -5,7 +5,8 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def valida_ambiente_pdf_linux(pasta_teste='setor/teste_pdf'):
+
+def valida_ambiente_pdf_linux(pasta_teste="setor/teste_pdf"):
     erros = []
 
     # Verifica se o LibreOffice está disponível no PATH
@@ -18,8 +19,8 @@ def valida_ambiente_pdf_linux(pasta_teste='setor/teste_pdf'):
     # Verifica se consegue criar e escrever em uma pasta
     try:
         os.makedirs(pasta_teste, exist_ok=True)
-        teste_arquivo = os.path.join(pasta_teste, 'teste.txt')
-        with open(teste_arquivo, 'w') as f:
+        teste_arquivo = os.path.join(pasta_teste, "teste.txt")
+        with open(teste_arquivo, "w") as f:
             f.write("Teste de escrita.")
         os.remove(teste_arquivo)
         logger.info(f"Permissões de escrita OK na pasta: {pasta_teste}")
@@ -32,5 +33,7 @@ def valida_ambiente_pdf_linux(pasta_teste='setor/teste_pdf'):
             logger.error(erro)
         return False, erros
     else:
-        logger.info("Ambiente validado com sucesso para geração de PDFs com LibreOffice.")
+        logger.info(
+            "Ambiente validado com sucesso para geração de PDFs com LibreOffice."
+        )
         return True, []

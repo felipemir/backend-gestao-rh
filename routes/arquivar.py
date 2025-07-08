@@ -2,14 +2,15 @@ from flask import jsonify, request, Blueprint
 from conection_mysql import connect_mysql
 from mysql.connector import Error
 from flask_login import login_required  # Importa diretamente do Flask-Login
-from decorador import roles_required 
+from decorador import roles_required
 
-bp_arquivar_servidor = Blueprint('bp_arquivar_servidor', __name__)
+bp_arquivar_servidor = Blueprint("bp_arquivar_servidor", __name__)
+
 
 # Rota para arquivar um servidor (funcionário)
-@bp_arquivar_servidor.route('/api/servidores/<int:id>/arquivar', methods=['PATCH'])
-#@login_required
-#@roles_required('admin')
+@bp_arquivar_servidor.route("/api/servidores/<int:id>/arquivar", methods=["PATCH"])
+# @login_required
+# @roles_required('admin')
 def arquivar_servidor(id):
     print("Cheguei aqui")
     try:
@@ -23,7 +24,7 @@ def arquivar_servidor(id):
 
         if servidor is None:
             conexao.close()
-            return jsonify({'erro': 'Servidor não encontrado'}), 404
+            return jsonify({"erro": "Servidor não encontrado"}), 404
 
         # Atualiza o status do servidor para "arquivado"
         arquivar_servidor = """
@@ -34,11 +35,21 @@ def arquivar_servidor(id):
         cursor.execute(arquivar_servidor, (id,))
         conexao.commit()
         conexao.close()
-    
-        return jsonify({'mensagem': 'Servidor arquivado com sucesso', 'servidor_arquivado': {
-            'nome': servidor['nome'] ,
-            'setor': servidor['setor'] ,
-        } ,
-        }), 200
+
+        return (
+            jsonify(
+                {
+                    "mensagem": "Servidor arquivado com sucesso",
+                    "servidor_arquivado": {
+                        "nome": servidor["nome"],
+                        "setor": servidor["setor"],
+                    },
+                }
+            ),
+            200,
+        )
     except Exception as exception:
-        return jsonify({'erro': f'Erro ao conectar ao banco de dados: {str(exception)}'}), 500
+        return (
+            jsonify({"erro": f"Erro ao conectar ao banco de dados: {str(exception)}"}),
+            500,
+        )

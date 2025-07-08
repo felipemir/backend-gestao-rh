@@ -1,6 +1,7 @@
 import pandas as pd
 from conection import conect_firestore
 
+
 def importar_dados_para_firestore(file_path):
     try:
         # Estabelecer conexão com Firestore
@@ -17,19 +18,24 @@ def importar_dados_para_firestore(file_path):
         # Iterar sobre os registros do DataFrame e inserir no Firestore
         for _, linha in df.iterrows():
             # Usando add() para gerar um ID automático
-            db.collection("estagiarios").add({
-                "nome": linha["NOME"],
-                "cargo": linha["CARGO"],
-                "lotacao": linha["LOTACAO"],
-                "horario": linha["HORARIO"],
-            })
+            db.collection("estagiarios").add(
+                {
+                    "nome": linha["NOME"],
+                    "cargo": linha["CARGO"],
+                    "lotacao": linha["LOTACAO"],
+                    "horario": linha["HORARIO"],
+                }
+            )
 
         print("Dados importados com sucesso para a coleção 'estagiarios' no Firestore!")
 
     except Exception as e:
         print(f"Erro ao processar o arquivo Excel ou inserir no Firestore: {e}")
 
+
 # Testar a função com um arquivo Excel
 if __name__ == "__main__":
-    caminho_arquivo = "FREQUÊNCIAS ESTAGIÁRIO.xlsx"  # Substitua pelo caminho do seu arquivo Excel
+    caminho_arquivo = (
+        "FREQUÊNCIAS ESTAGIÁRIO.xlsx"  # Substitua pelo caminho do seu arquivo Excel
+    )
     importar_dados_para_firestore(caminho_arquivo)

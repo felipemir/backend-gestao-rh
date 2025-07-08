@@ -3,9 +3,13 @@ from datetime import timedelta
 from conection_mysql import connect_mysql
 from mysql.connector import Error
 from flask_login import login_required  # Importa diretamente do Flask-Login
-from decorador import roles_required   # Importa o decorador personalizado
+from decorador import roles_required  # Importa o decorador personalizado
 
-bp_buscar_estagiarios_arquivados = Blueprint('bp_buscar_estagiarios_arquivados', __name__)
+bp_buscar_estagiarios_arquivados = Blueprint(
+    "bp_buscar_estagiarios_arquivados", __name__
+)
+
+
 def timedelta_to_str(td):
     """Converte timedelta em string no formato HH:MM:SS"""
     total_seconds = int(td.total_seconds())
@@ -13,7 +17,8 @@ def timedelta_to_str(td):
     minutes, seconds = divmod(remainder, 60)
     return f"{hours:02}:{minutes:02}:{seconds:02}"
 
-@bp_buscar_estagiarios_arquivados.route('/api/estagiarios/arquivados', methods=['GET'])
+
+@bp_buscar_estagiarios_arquivados.route("/api/estagiarios/arquivados", methods=["GET"])
 def buscar_estagiarios_arquivados():
     try:
         conexao = connect_mysql()
@@ -32,7 +37,10 @@ def buscar_estagiarios_arquivados():
             for key, value in estagiario.items():
                 if isinstance(value, timedelta):
                     estagiario[key] = timedelta_to_str(value)
-        
+
         return jsonify({"estagiarios": estagiarios_arquivados}), 200
     except Exception as exception:
-        return jsonify({'erro': f'Erro ao conectar ao banco de dados: {str(exception)}'}), 500
+        return (
+            jsonify({"erro": f"Erro ao conectar ao banco de dados: {str(exception)}"}),
+            500,
+        )

@@ -2,6 +2,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 from conection import conect_firestore
 
+
 def importar_dados_para_firestore(file_path):
     try:
         # Estabelecer conexão com Firestore
@@ -31,24 +32,37 @@ def importar_dados_para_firestore(file_path):
             horariosaida = converter_timedelta_para_hora(linha["HORARIOSAIDA"])
 
             # Inserir dados no Firestore
-            db.collection("funcionarios").add({
-                "setor": linha["SETOR"],
-                "nome": linha["NOME"],
-                "matricula": linha["MATRICULA"],
-                "cargo": linha["CARGO"],
-                "funcao": linha["FUNCAO"] if not pd.isna(linha["FUNCAO"]) else None,
-                "horarioentrada": horarioentrada,
-                "horariosaida": horariosaida,
-                "feriasinicio": linha["FERIASINICIO"] if not pd.isna(linha["FERIASINICIO"]) else None,
-                "feriasfinal": linha["FERIASFINAL"] if not pd.isna(linha["FERIASFINAL"]) else None,
-            })
+            db.collection("funcionarios").add(
+                {
+                    "setor": linha["SETOR"],
+                    "nome": linha["NOME"],
+                    "matricula": linha["MATRICULA"],
+                    "cargo": linha["CARGO"],
+                    "funcao": linha["FUNCAO"] if not pd.isna(linha["FUNCAO"]) else None,
+                    "horarioentrada": horarioentrada,
+                    "horariosaida": horariosaida,
+                    "feriasinicio": (
+                        linha["FERIASINICIO"]
+                        if not pd.isna(linha["FERIASINICIO"])
+                        else None
+                    ),
+                    "feriasfinal": (
+                        linha["FERIASFINAL"]
+                        if not pd.isna(linha["FERIASFINAL"])
+                        else None
+                    ),
+                }
+            )
 
         print("Dados importados com sucesso para o Firestore!")
 
     except Exception as e:
         print(f"Erro ao processar o arquivo Excel ou inserir no Firestore: {e}")
 
+
 # Testar a função com um arquivo Excel
 if __name__ == "__main__":
-    caminho_arquivo = "nome-servidores.xlsx"  # Substitua pelo caminho do seu arquivo Excel
+    caminho_arquivo = (
+        "nome-servidores.xlsx"  # Substitua pelo caminho do seu arquivo Excel
+    )
     importar_dados_para_firestore(caminho_arquivo)

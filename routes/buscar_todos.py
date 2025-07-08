@@ -16,8 +16,8 @@ def timedelta_to_str(td):
 
 
 @bp.route("/api/servidores", methods=["GET"])
-# @login_required  
-# @roles_required('admin', 'editor') 
+# @login_required
+# @roles_required('admin', 'editor')
 def buscar_servidores():
     try:
         conexao = connect_mysql()
@@ -64,9 +64,16 @@ def buscar_servidores():
         return jsonify({"servidores": servidores}), 200
 
     except Error as e:
-        return jsonify({"erro": f"Erro ao conectar ou buscar dados no banco de dados: {str(e)}"}), 500
+        return (
+            jsonify(
+                {
+                    "erro": f"Erro ao conectar ou buscar dados no banco de dados: {str(e)}"
+                }
+            ),
+            500,
+        )
 
     finally:
-        if 'conexao' in locals() and conexao.is_connected():
+        if "conexao" in locals() and conexao.is_connected():
             cursor.close()
             conexao.close()

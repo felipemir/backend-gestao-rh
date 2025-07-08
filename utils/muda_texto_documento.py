@@ -1,5 +1,6 @@
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
+
 def muda_texto_documento(doc, campo, valor):
     for p in doc.paragraphs:
         if campo in p.text:
