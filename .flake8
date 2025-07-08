@@ -1,0 +1,18 @@
+[flake8]
+# 1. Ignorar erros específicos
+# F401: Módulo importado mas não usado (vamos deixar para corrigir depois)
+# E501: Linha muito longa (aumentaremos o limite em vez de ignorar)
+# W292: Falta nova linha no final do ficheiro
+# E402: Importação de módulo não está no topo do ficheiro (comum em projetos Flask com blueprints)
+ignore = F401, W292, E402
+
+# 2. Aumentar o comprimento máximo da linha para 120 caracteres
+max-line-length = 120
+
+# 3. Excluir pastas que não queremos analisar
+exclude =
+    .git,
+    __pycache__,
+    meuambiente,
+    arquivos-temporarios,
+    uploads

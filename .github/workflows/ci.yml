@@ -43,8 +43,8 @@ jobs:
       # 4. Linting com Flake8: Verifica a qualidade do código.
       - name: Rodar linter com Flake8
         run: |
-          # Analisa o diretório atual (.), mas exclui a pasta do ambiente virtual.
-          flake8 . --count --exclude=meuambiente --show-source --statistics
+          # O flake8 irá encontrar e usar automaticamente o ficheiro .flake8
+          flake8 .
 
       # 5. Rodar Testes com Pytest: Executa os testes unitários.
      
